@@ -311,6 +311,12 @@ class SchoolCard extends StatelessWidget {
               width: 54,
               height: 54,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: 54,
+                height: 54,
+                color: const Color(0xFFF3F4F6),
+                child: const Icon(Icons.school, color: Color(0xFF9AA0A6), size: 24),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -320,6 +326,8 @@ class SchoolCard extends StatelessWidget {
               children: [
                 Text(
                   school.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Color(0xFF2D2D2D),
                     fontSize: 15,

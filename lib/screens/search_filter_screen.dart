@@ -521,6 +521,12 @@ class _SchoolResultCard extends StatelessWidget {
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: 80,
+                    height: 80,
+                    color: const Color(0xFFF3F4F6),
+                    child: const Icon(Icons.school, color: Color(0xFF9AA0A6), size: 32),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -530,20 +536,24 @@ class _SchoolResultCard extends StatelessWidget {
                   children: [
                     Text(
                       school.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       school.city,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
                       children: [
                         _chip(Icons.star, school.rating.toStringAsFixed(1), const Color(0xFFFFB703)),
-                        const SizedBox(width: 8),
                         _chip(Icons.category_outlined, school.type, _typeColor(school.type)),
-                        const SizedBox(width: 8),
                         _chip(
                           Icons.currency_pound,
                           school.feeRate == 0

@@ -53,11 +53,16 @@ class _LoginScreenState extends State<LoginScreen> {
         message = 'Wrong password provided.';
       } else if (e.code == 'invalid-email') {
         message = 'The email address is badly formatted.';
+      } else {
+        message = 'Error (${e.code}): ${e.message}';
       }
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.redAccent,
+          ),
         );
       }
     } finally {
