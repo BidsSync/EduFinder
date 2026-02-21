@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "841808922624",
+    "project_id": "edufinder-1ad73",
+    "storage_bucket": "edufinder-1ad73.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841808922624:android:2aee4da19d3a02491870e5",
+        "android_client_info": {
+          "package_name": "com.example.edufindr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQwwL7bqyEM42pg4056Sbz_Q73vOGbCSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
