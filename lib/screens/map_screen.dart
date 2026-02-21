@@ -23,12 +23,13 @@ class _MapScreenState extends State<MapScreen> {
 
   List<School> get _filteredSchools {
     if (_searchQuery.isEmpty) return mockUkSchools;
-    final q = _searchQuery.toLowerCase();
+    
+    final query = _searchQuery.toLowerCase();
     return mockUkSchools.where((s) {
-      return s.name.toLowerCase().contains(q) ||
-          s.city.toLowerCase().contains(q) ||
-          s.type.toLowerCase().contains(q) ||
-          s.course.toLowerCase().contains(q);
+      return s.name.toLowerCase().contains(query) ||
+             s.city.toLowerCase().contains(query) ||
+             s.type.toLowerCase().contains(query) ||
+             s.course.toLowerCase().contains(query);
     }).toList();
   }
 
@@ -118,7 +119,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
 
-            // ── Map ───────────────────────────────────────────────────────
+            // ── Map ───────────────────────────────────────────────────────            // Map
             Expanded(
               flex: 5,
               child: Stack(
@@ -132,14 +133,10 @@ class _MapScreenState extends State<MapScreen> {
                       maxZoom: 18,
                     ),
                     children: [
-                      // OpenStreetMap tile layer — completely free, no API key
                       TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                         userAgentPackageName: 'com.example.edufindr',
                       ),
-
-                      // School markers
                       MarkerLayer(
                         markers: _filteredSchools.map((school) {
                           final isSelected = _selectedSchool?.id == school.id;
@@ -159,35 +156,29 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                     ],
                   ),
-
-                  // School count badge
+                  // Legends, count badge, etc.
                   Positioned(
-                    top: 12,
-                    left: 12,
+                    top: 10,
+                    left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: const Color(0xFF729C46),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.15),
-                              blurRadius: 6)
+                          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
                         ],
                       ),
                       child: Text(
-                        '${_filteredSchools.length} Schools',
+                        '${_filteredSchools.length} Schools Found',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 12
                         ),
                       ),
                     ),
                   ),
-
-                  // Legend
                   Positioned(
                     top: 12,
                     right: 12,
@@ -255,7 +246,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
 
-            // ── Bottom panel ─────────────────────────────────────────────
+            // Bottom panel (selected school details or school list)
             if (_selectedSchool != null)
               _buildSelectedCard(_selectedSchool!)
             else

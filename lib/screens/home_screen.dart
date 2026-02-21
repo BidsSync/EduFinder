@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../data/mock_schools.dart';
+import 'login_screen.dart';
 import 'map_screen.dart';
 import 'search_filter_screen.dart';
 
@@ -11,34 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentNav = 0;
-
-  final List<_SchoolCardData> _schools = const [
-    _SchoolCardData(
-      title: 'Greenfield Primary',
-      rating: 4.4,
-      distance: '1.2km',
-      image: 'assets/images/onb3.png',
-    ),
-    _SchoolCardData(
-      title: 'Oxford High School',
-      rating: 4.4,
-      distance: '2.2km',
-      image: 'assets/images/oxford.jpeg',
-    ),
-    _SchoolCardData(
-      title: 'Oxford High School',
-      rating: 4.4,
-      distance: '2.2km',
-      image: 'assets/images/oxford2.jpeg',
-    ),
-    _SchoolCardData(
-      title: 'Oxford High School',
-      rating: 4.4,
-      distance: '2.2km',
-      image: 'assets/images/oxford3.jpeg',
-    ),
-  ];
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +37,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 18),
                     _buildPromoDots(),
                     const SizedBox(height: 12),
-                    ..._schools.map((s) => _SchoolCard(data: s)).toList(),
+                      const Text(
+                        'Popular Schools',
+                        style: TextStyle(
+                          color: Color(0xFF1E3A8A),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Column(
+                        children: mockUkSchools.take(3).map((school) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: SchoolCard(school: school),
+                          );
+                        }).toList(),
+                      ),
                   ],
                 ),
               ),
             ),
             _BottomNav(
-              currentIndex: _currentNav,
+              currentIndex: _selectedIndex,
               onTap: (index) {
                 if (index == 3) {
-                  Navigator.pushReplacement(
+                  // Sign out and navigate back to login
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
                   );
                 } else if (index == 1) {
                    Navigator.push(
@@ -81,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 } else {
                   setState(() {
-                    _currentNav = index;
+                    _selectedIndex = index;
                   });
                 }
               },
@@ -288,28 +283,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _SchoolCardData {
-  final String title;
-  final double rating;
-  final String distance;
-  final String image;
-
-  const _SchoolCardData({
-    required this.title,
-    required this.rating,
-    required this.distance,
-    required this.image,
-  });
-}
-
-class _SchoolCard extends StatelessWidget {
-  final _SchoolCardData data;
-  const _SchoolCard({required this.data});
+class SchoolCard extends StatelessWidget {
+  final School school;
+  const SchoolCard({super.key, required this.school});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -326,8 +306,8 @@ class _SchoolCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              data.image,
+            child: Image.network(
+              school.imageUrl,
               width: 54,
               height: 54,
               fit: BoxFit.cover,
@@ -339,7 +319,7 @@ class _SchoolCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data.title,
+                  school.name,
                   style: const TextStyle(
                     color: Color(0xFF2D2D2D),
                     fontSize: 15,
@@ -352,7 +332,7 @@ class _SchoolCard extends StatelessWidget {
                     const Icon(Icons.star, size: 14, color: Color(0xFFFFB703)),
                     const SizedBox(width: 4),
                     Text(
-                      data.rating.toStringAsFixed(1),
+                      school.rating.toStringAsFixed(1),
                       style: const TextStyle(
                         color: Color(0xFF4A4A4A),
                         fontSize: 12,
@@ -370,7 +350,7 @@ class _SchoolCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      data.distance,
+                      '£${school.feeRate.toInt()}/yr',
                       style: const TextStyle(
                         color: Color(0xFF9AA0A6),
                         fontSize: 12,

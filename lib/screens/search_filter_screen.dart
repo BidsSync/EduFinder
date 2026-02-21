@@ -17,6 +17,7 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
   String? _selectedType;
   List<School>? _results;
   bool _hasSearched = false;
+  bool _isSearching = false;
 
   final List<String> _schoolTypes = [
     'Primary',
@@ -27,6 +28,17 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
     'Independent',
     'Special Needs',
   ];
+
+  final Map<String, Color> _typeColors = {
+    'Secondary': const Color(0xFF457B9D),
+    'Private': const Color(0xFF6A4C93),
+    'Grammar': const Color(0xFF2A9D8F),
+    'Independent': const Color(0xFFE76F51),
+    'Primary': const Color(0xFFFFB703),
+  };
+
+  Color _getSchoolTypeColor(String type) =>
+      _typeColors[type] ?? const Color(0xFF729C46);
 
   @override
   void dispose() {
@@ -39,12 +51,12 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
   void _performSearch() {
     setState(() {
       _hasSearched = true;
-      _results = _filterSchools();
+      _results = _filterSchools(mockUkSchools);
     });
   }
 
-  List<School> _filterSchools() {
-    return mockUkSchools.where((school) {
+  List<School> _filterSchools(List<School> schools) {
+    return schools.where((school) {
       // Filter by type
       if (_selectedType != null && _selectedType!.isNotEmpty) {
         if (!school.type.toLowerCase().contains(_selectedType!.toLowerCase())) {
@@ -203,17 +215,8 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
             ),
             const SizedBox(height: 40),
 
-            ElevatedButton.icon(
-              onPressed: _performSearch,
-              icon: const Icon(Icons.search, color: Colors.white),
-              label: const Text(
-                'Search Schools',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+            ElevatedButton(
+              onPressed: _isSearching ? null : _performSearch,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: const Color(0xFF729C46),
@@ -222,6 +225,30 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
                 ),
                 elevation: 2,
               ),
+              child: _isSearching
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.search, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          'Search Schools',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -458,12 +485,11 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
   }
 }
 
-// School result card widget
 class _SchoolResultCard extends StatelessWidget {
   final School school;
   const _SchoolResultCard({required this.school});
 
-  static const Map<String, Color> _typeColors = {
+  final Map<String, Color> _typeColors = const {
     'Boarding': Color(0xFFE63946),
     'Secondary': Color(0xFF457B9D),
     'Private': Color(0xFF6A4C93),
@@ -472,101 +498,66 @@ class _SchoolResultCard extends StatelessWidget {
     'Primary': Color(0xFFFFB703),
   };
 
-  Color get _typeColor => _typeColors[school.type] ?? const Color(0xFF729C46);
+  Color _typeColor(String type) => _typeColors[type] ?? const Color(0xFF729C46);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => SchoolDetailScreen(school: school)),
-      ),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SchoolDetailScreen(school: school)),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: _typeColor.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(Icons.school, color: _typeColor, size: 24),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  school.imageUrl,
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        school.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2D2D2D),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      school.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      school.city,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _chip(Icons.star, school.rating.toStringAsFixed(1), const Color(0xFFFFB703)),
+                        const SizedBox(width: 8),
+                        _chip(Icons.category_outlined, school.type, _typeColor(school.type)),
+                        const SizedBox(width: 8),
+                        _chip(
+                          Icons.currency_pound,
+                          school.feeRate == 0
+                              ? 'Free'
+                              : '£${(school.feeRate / 1000).toStringAsFixed(0)}k/yr',
+                          const Color(0xFF5D8BB5),
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on, size: 12, color: Colors.grey[400]),
-                          const SizedBox(width: 3),
-                          Expanded(
-                            child: Text(
-                              '${school.city} · ${school.address}',
-                              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
-                const Icon(Icons.arrow_forward_ios, size: 14, color: Color(0xFF9AA0A6)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Info row
-            Row(
-              children: [
-                _chip(Icons.star, school.rating.toStringAsFixed(1), const Color(0xFFFFB703)),
-                const SizedBox(width: 8),
-                _chip(Icons.category_outlined, school.type, _typeColor),
-                const SizedBox(width: 8),
-                _chip(
-                  Icons.currency_pound,
-                  school.feeRate == 0
-                      ? 'Free'
-                      : '£${(school.feeRate / 1000).toStringAsFixed(0)}k/yr',
-                  const Color(0xFF5D8BB5),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // Courses
-            Text(
-              '📚 ${school.course}',
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

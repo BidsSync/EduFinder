@@ -10,6 +10,7 @@ class School {
   final double rating;
   final String city;
   final String description;
+  final String imageUrl;
 
   const School({
     required this.id,
@@ -23,6 +24,7 @@ class School {
     required this.rating,
     required this.city,
     required this.description,
+    required this.imageUrl,
   });
 }
 
@@ -39,6 +41,7 @@ const List<School> mockUkSchools = [
     rating: 4.8,
     city: 'Windsor',
     description: 'One of the most prestigious boarding schools in the world, educating boys since 1440.',
+    imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '2',
@@ -52,6 +55,7 @@ const List<School> mockUkSchools = [
     rating: 4.7,
     city: 'London',
     description: 'A leading independent boarding school for boys, located in north-west London.',
+    imageUrl: 'https://images.unsplash.com/photo-1523050853064-074fc4485572?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '3',
@@ -65,6 +69,7 @@ const List<School> mockUkSchools = [
     rating: 4.9,
     city: 'London',
     description: 'A leading independent day school for boys aged 13–18, known for academic excellence.',
+    imageUrl: 'https://images.unsplash.com/photo-1592280771190-3e2e4d571952?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '4',
@@ -78,6 +83,7 @@ const List<School> mockUkSchools = [
     rating: 4.8,
     city: 'London',
     description: 'A prestigious mixed school adjacent to Westminster Abbey in central London.',
+    imageUrl: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '5',
@@ -91,6 +97,7 @@ const List<School> mockUkSchools = [
     rating: 4.6,
     city: 'Manchester',
     description: 'One of England\'s leading independent schools for boys, with a history spanning five centuries.',
+    imageUrl: 'https://images.unsplash.com/photo-1525921429624-479b6a29d84c?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '6',
@@ -104,6 +111,7 @@ const List<School> mockUkSchools = [
     rating: 4.7,
     city: 'Rugby',
     description: 'One of England\'s oldest schools, known for the invention of Rugby football.',
+    imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '7',
@@ -117,6 +125,7 @@ const List<School> mockUkSchools = [
     rating: 4.6,
     city: 'Brighton',
     description: 'A leading co-educational independent school on the south coast of England.',
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '8',
@@ -130,6 +139,7 @@ const List<School> mockUkSchools = [
     rating: 4.5,
     city: 'Birmingham',
     description: 'A selective grammar school and one of the highest performing state schools in Birmingham.',
+    imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d1aa7da0849?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '9',
@@ -143,6 +153,7 @@ const List<School> mockUkSchools = [
     rating: 4.5,
     city: 'Bristol',
     description: 'One of the top independent schools in the South West of England.',
+    imageUrl: 'https://images.unsplash.com/photo-1523050853064-074fc4485572?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '10',
@@ -156,6 +167,7 @@ const List<School> mockUkSchools = [
     rating: 4.5,
     city: 'Edinburgh',
     description: 'One of Scotland\'s oldest independent schools, offering an excellent education in Edinburgh.',
+    imageUrl: 'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '11',
@@ -169,6 +181,7 @@ const List<School> mockUkSchools = [
     rating: 4.4,
     city: 'Cardiff',
     description: 'A highly rated state secondary school in Cardiff, Wales.',
+    imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '12',
@@ -182,6 +195,7 @@ const List<School> mockUkSchools = [
     rating: 4.5,
     city: 'Nottingham',
     description: 'A leading independent school with a heritage stretching back to 1513.',
+    imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '13',
@@ -195,6 +209,7 @@ const List<School> mockUkSchools = [
     rating: 4.4,
     city: 'Leeds',
     description: 'One of the north\'s leading independent schools with outstanding academic results.',
+    imageUrl: 'https://images.unsplash.com/photo-1491333078588-55b6733c79e0?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '14',
@@ -208,6 +223,7 @@ const List<School> mockUkSchools = [
     rating: 4.6,
     city: 'Exeter',
     description: 'A highly regarded independent school in the heart of Devon.',
+    imageUrl: 'https://images.unsplash.com/photo-1498243639352-06972e617931?q=80&w=400&auto=format&fit=crop',
   ),
   School(
     id: '15',
@@ -221,5 +237,6 @@ const List<School> mockUkSchools = [
     rating: 4.3,
     city: 'Liverpool',
     description: 'An independent day school in Liverpool offering excellent academic and extra-curricular activities.',
+    imageUrl: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400&auto=format&fit=crop',
   ),
 ];
